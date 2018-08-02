@@ -11,9 +11,15 @@
       <td><label><%= translate 'user' %></label></td>
       <td>
         <select name="holiday[user_id]">
-            <option value=""><%= translate 'select_default' %></option>
+          <option value=""><%= translate 'select_default' %></option>
           <% Holiday.get_activated_users.each do |u| %>
-            <option value="<%= u.id.to_s %>"><%= u.login.to_s %></option>
+            <% if User.current.admin? %>
+              <option value="<%= u.id.to_s %>"><%= u.login.to_s %></option>
+            <% elsif u.login == User.current.login %>
+              <option value="<%= u.id.to_s %>"><%= u.login.to_s %></option>
+            <% else %>
+              <option value="<%= u.id.to_s %>"><%= "Error" %></option>
+            <% end -%>
           <% end %>
         </select>
       </td>
